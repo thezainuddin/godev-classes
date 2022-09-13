@@ -43,6 +43,31 @@ router.get('/:idVariable', async(req, res) => {
     }
 })
 
+
+// GET all students from particular city
+// Endpoint: /api/v1/students/city/karachi
+
+router.get('/city/:cityVar', async(req, res) => {
+    try{
+        await students.find( {city: req.params.cityVar}, (err, data) => {
+
+            if(err){
+                return res.status(500).json( { message: "Error in the DB"})
+            }
+            
+            if( (data!=null) && (data.length>0) ){
+                res.status(200).send(data)
+            }
+            else{           //data.length=0
+                res.status(400).json( { message: "No Student from this city"})
+            }
+        })
+    }
+    catch{
+        res.status(500).json( { message: "Error in this API"})
+    }
+})
+
 router.post('/', async(req,res) => {
     try{
         await students.insert(req.body);
@@ -79,6 +104,23 @@ router.delete('/:idVariable', async(req,res) => {
             }
             else{       // if(isDataDeleted==false)
                 res.status(400).json( { message: "Student with this ID does not exist"})
+            }
+        })
+    }
+    catch{
+        res.status(500).json( { message: "Error in this API"})
+    }
+})
+
+router.delete('/', async(req,res) => {
+    try{
+        await students.remove({}, {multi:true}, (err, isDataDeleted) => {
+            if(err){ return res.status(500).json( { message: "Error in the DB"}) };
+            if(isDataDeleted){          // if(isDataDeleted==true)
+                res.status(200).json({message: "Student Deleted Successfully"})
+            }
+            else{       // if(isDataDeleted==false)
+                res.status(400).json( { message: "No Student Data in the DB"})
             }
         })
     }
