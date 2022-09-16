@@ -68,8 +68,16 @@ router.get('/city/:cityVar', async(req, res) => {
     }
 })
 
+// Homework 1
+// GET the average score for all the students
+// Endpoint: /api/v1/students/avgScore
+
 router.post('/', async(req,res) => {
     try{
+        // Homework 2
+        // first check if student with this name is already in the database
+        // If not, Add this student
+        // If yes, tell frontend that this student name already exists.
         await students.insert(req.body);
         res.status(200).json( { message: "Student Added Successfully"})
     }
